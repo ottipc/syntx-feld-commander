@@ -63,7 +63,7 @@ export const ScoreDistribution: React.FC = () => {
                             />
                         </div>
                         <span className={`font-bold w-1/4 text-right ${item.color}`}>
-                            {item.value} ({item.percentage})
+                            {item.value}
                         </span>
                     </div>
                 ))}
