@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react';
 
 const BASE_URL = 'https://dev.syntx-system.com';
+const FETCH_INTERVAL = 15000; // 15 Sekunden
 
 interface SyntxStats {
-  activeFields: number; // total_prompts
-  dataRate: number;     // avg_score
-  commErrors: number;   // failures.count
+  activeFields: number;
+  dataRate: number;
+  commErrors: number;
 }
 
 interface ChartDataPoint {
@@ -50,7 +51,11 @@ export function useSyntxData(): SyntxData {
   const [data, setData] = useState<SyntxData>(initialData);
 
   useEffect(() => {
+    
     async function fetchData() {
+      // Setze isLoading nur auf true, wenn es der ERSTE Ladevorgang war
+      setData(prev => ({ ...prev, isLoading: !prev.stats })); 
+      
       try {
         const [statsResponse, chartResponse] = await Promise.all([
           fetch(`${BASE_URL}/analytics/complete-dashboard`),
@@ -65,7 +70,6 @@ export function useSyntxData(): SyntxData {
         const chartResult = await chartResponse.json();
         
         // MAPPING-LOGIK BASIEREND AUF DEM cURL-OUTPUT
-        
         const mappedStats: SyntxStats = {
             activeFields: statsResult.system_health?.total_prompts || 0,
             dataRate: statsResult.system_health?.avg_score || 0,
@@ -85,7 +89,6 @@ export function useSyntxData(): SyntxData {
 
         const mappedSuccessStories: SuccessStory[] = statsResult.success_stories?.examples || [];
 
-
         setData({
           stats: mappedStats,
           chartData: mappedChartData,
@@ -100,13 +103,21 @@ export function useSyntxData(): SyntxData {
         setData(prev => ({ 
             ...prev, 
             isLoading: false, 
-            error: e instanceof Error ? e.message : 'Unbekannter Datenfehler' 
+            error: e instanceof Error ? e.message : 'Datenstromfehler. Starte Re-Synchronisation in 15s.' 
         }));
       }
     }
 
+    // 1. Initialer Fetch
     fetchData();
-  }, []); 
+
+    // 2. Realtime Fetch mit Interval
+    const intervalId = setInterval(fetchData, FETCH_INTERVAL);
+
+    // Cleanup: Stoppe den Interval, wenn die Komponente unmountet wird
+    return () => clearInterval(intervalId);
+
+  }, []);
 
   return data;
 }
