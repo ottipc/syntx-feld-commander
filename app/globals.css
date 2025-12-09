@@ -142,3 +142,24 @@
   .animate-pulse {
     animation: pulse 2s infinite;
   }
+
+  /* Shimmer-Effekt für kleine Balken - angepasst */
+  @keyframes shimmer-small {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+  }
+
+  .animate-shimmer-small {
+    animation: shimmer-small 1.5s infinite;
+  }
+
+  /* Korrigierter Shimmer-Effekt */
+  @keyframes shimmer-correct {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  .animate-shimmer-correct {
+    animation: shimmer-correct 1.5s infinite;
+    width: 50% !important;
+  }

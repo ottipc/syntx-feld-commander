@@ -77,7 +77,7 @@ export const StromQueueStatus: React.FC = () => {
                         style={{ width: `${energyLevel}%` }}
                     >
                         {/* Scanline-Animation über dem Balken */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer-correct"></div>
                     </div>
                     
                     {/* Pulsierende Energie-Punkte */}
