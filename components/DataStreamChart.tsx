@@ -1,39 +1,30 @@
-// components/DataStreamChart.tsx
-import { Card, Title, Subtitle, BarChart } from "@tremor/react";
+'use client';
 
-const dataKanal = [
-  {
-    Kanal: 'Alpha',
-    'Datenstrom': 2488,
-  },
-  {
-    Kanal: 'Beta',
-    'Datenstrom': 1440,
-  },
-  {
-    Kanal: 'Gamma',
-    'Datenstrom': 788,
-  },
-  {
-    Kanal: 'Delta',
-    'Datenstrom': 2000,
-  },
-];
+import { Card, Title, BarChart, Subtitle } from "@tremor/react";
+import { useSyntxData } from './useSyntxData'; 
 
 export function DataStreamChart() {
+  const { chartData } = useSyntxData(); 
+
+  if (!chartData) return null; 
+
+  // Formatiert die Y-Achse
+  const dataFormatter = (number: number) =>
+    Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 }).format(number) + ' Einträge';
+
   return (
-    <Card className="mt-8 bg-syntx-dark border-syntx-neon/20 shadow-syntx-glow">
-      <Title className="text-syntx-neon font-mono">KANAL DATENSTROM VERTEILUNG</Title>
+    <Card className="mt-8 bg-syntx-dark border-syntx-neon border-opacity-20 shadow-syntx-glow">
+      <Title className="text-syntx-neon font-mono">Score-Verteilung (Prompts)</Title>
       <Subtitle className="text-gray-500 font-mono">
-        Verteilung des erfassten Datenstroms über die aktiven Kanäle.
+        Anzahl der Prompts pro erreichter Score-Bandbreite (0-100).
       </Subtitle>
       <BarChart
-        className="mt-6 h-72 font-mono"
-        data={dataKanal}
-        index="Kanal"
-        categories={['Datenstrom']}
+        className="mt-6"
+        data={chartData}
+        index="scoreRange"             
+        categories={['scoreCount']}     
         colors={['teal']}
-        valueFormatter={(number: number) => `${Intl.NumberFormat('de').format(number)} MB`}
+        valueFormatter={dataFormatter}
         yAxisWidth={48}
       />
     </Card>
