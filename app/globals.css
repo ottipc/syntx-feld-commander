@@ -3,9 +3,8 @@
 @tailwind utilities;
 
 /* SYNTX Global Style Kalibrierung */
-/* HIER SIND KEINE @apply BLÖCKE */
 html,
 body {
-    /* Fügt h-full und w-full hinzu */
+    /* Fügt h-full und w-full hinzu, wie es im Layout notwendig ist */
     @apply h-full w-full;
 }

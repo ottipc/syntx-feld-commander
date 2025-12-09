@@ -12,8 +12,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de" className="bg-syntx-dark text-white">
-      <body className="font-mono h-full w-full">{children}</body>
+    <html lang="de">
+      {/* Farbe und Hintergrund auf Body verschoben, um korrekte Vererbung zu gewährleisten */}
+      <body className="font-mono bg-syntx-dark text-white" suppressHydrationWarning>{children}</body>
     </html>
   );
 }
