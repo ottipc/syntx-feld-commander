@@ -1,4 +1,4 @@
-import { DashboardContainer } from '../components/DashboardContainer';
+import { DashboardContainer } from '../app/DashboardContainer';
 
 export default function Home() {
   return (

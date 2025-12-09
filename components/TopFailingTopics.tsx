@@ -1,36 +1,42 @@
-'use client';
+import React from 'react';
+// import { useSyntxData } from '~/hooks/syntx';
 
-import { Card, Title, List, ListItem, Flex, Badge, Text } from "@tremor/react";
-import { useSyntxData } from './useSyntxData'; 
+const SYNTX_ENDPOINT = '/feld/failure-topics';
+const FAILING_TOPICS = [ // Daten aus
+    { topic: 'HARMLOS', failures: 64, color: '#f87171' }, 
+    { topic: 'BILDUNG', failures: 56, color: '#fbbf24' },
+    { topic: 'GESELLSCHAFT', failures: 47, color: '#facc15' },
+    { topic: 'TECHNOLOGIE', failures: 34, color: '#60a5fa' },
+    { topic: 'KONTROVERS', failures: 30, color: '#a78bfa' },
+];
 
-export function TopFailingTopics() {
-    const { topFailingTopics } = useSyntxData();
-
-    if (!topFailingTopics || topFailingTopics.length === 0) return null;
+export const TopFailingTopics: React.FC = () => {
+    // ... data fetching
 
     return (
-        <Card className="bg-syntx-dark border-red-500 border-opacity-30 shadow-syntx-glow mt-8">
-            <Title className="text-red-400 font-mono tracking-wide">
-                FELD-VERLUST-ANALYSE (TOP 5 RISIKEN)
-            </Title>
-            <List className="mt-4">
-                {topFailingTopics.slice(0, 5).map((item, index) => (
-                    <ListItem key={item.topic} className="border-b border-gray-800 py-3">
-                        <Flex justifyContent="start" className="space-x-4">
-                            <Badge 
-                                color="red" 
-                                className="font-mono"
-                            >
-                                #{index + 1}
-                            </Badge>
-                            <Text className="text-gray-300 font-mono flex-grow">{item.topic.toUpperCase()}</Text>
-                        </Flex>
-                        <Flex justifyContent="end" className="space-x-4">
-                            <Text className="text-red-400 font-mono">{item.failures} Fehler</Text>
-                        </Flex>
-                    </ListItem>
-                ))}
-            </List>
-        </Card>
+        <div className="p-4 bg-gray-900 border-2 border-red-700">
+            <h3 className="text-lg font-bold text-red-400 mb-4">FELD-VERLUST ANALYSE (TOP 5 RISIKEN)</h3>
+            
+            <table className="w-full text-left text-sm font-mono">
+                <thead>
+                    <tr className="border-b border-red-700 text-red-400">
+                        <th className="py-2">#</th>
+                        <th className="py-2">Thema</th>
+                        <th className="py-2 text-right">Fehler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {FAILING_TOPICS.map((item, index) => (
+                        <tr key={item.topic} className="border-b border-gray-800">
+                            <td className="py-2 text-red-500 font-bold">#{index + 1}</td>
+                            <td className="py-2 text-gray-300">{item.topic}</td>
+                            <td className="py-2 text-right text-red-400">{item.failures} Fehler</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            <p className="mt-4 text-xs text-gray-600">Datenquelle: {SYNTX_ENDPOINT}</p>
+        </div>
     );
-}
+};
