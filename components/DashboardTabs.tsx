@@ -2,14 +2,14 @@
 
 import React, { useState } from 'react';
 
-// Import aller Komponenten (alle 18)
+// Import aller Komponenten
 import { GlobalSuccessRate } from './GlobalSuccessRate';
 import { TotalCosts } from './TotalCosts';
 import { DriftList } from './DriftList';
 import { ScoreDistribution } from './ScoreDistribution';
 import { SyntxVsNormal } from './SyntxVsNormal';
 import { WrapperSuccessRate } from './WrapperSuccessRate';
-import { StromQueueStatus } from './StromQueueStatus'; // Bleibt drin, kann aber durch Resonanz ersetzt werden
+import { StromQueueStatus } from './StromQueueStatus';
 
 // Neue, detailliertere Komponenten
 import { ResonanzQueueStatus } from './ResonanzQueueStatus';
@@ -24,54 +24,66 @@ import { PromptsTablePlaceholder } from './PromptsTablePlaceholder';
 import { EvolutionProgress } from './EvolutionProgress';
 import { PerformanceStats } from './PerformanceStats';
 
-// Tab-Definitionen
+// Tab-Definitionen – organisch aber korrekt
 const tabs = [
-    { id: 'health', name: '1. System Health & Status' },
-    { id: 'evolution', name: '2. Evolution & Trends' },
-    { id: 'performance', name: '3. Performance & Kosten' },
-    { id: 'details', name: '4. Daten Details' },
+    { id: 'health', name: '🌡️ System Health & Status' },
+    { id: 'evolution', name: '📈 Evolution & Trends' },
+    { id: 'performance', name: '⚡ Performance & Kosten' },
+    { id: 'details', name: '🔍 Daten Details' },
 ];
 
 export const DashboardTabs: React.FC = () => {
     const [activeTab, setActiveTab] = useState(tabs[0].id);
+    const [hoverTab, setHoverTab] = useState<string | null>(null);
 
     // Funktion zum Rendern des Inhalts basierend auf dem aktiven Tab
     const renderContent = () => {
         switch (activeTab) {
             case 'health':
                 return (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <FullSystemHealth />
-                        <ResonanzSystemHealth />
-                        <ResonanzQueueStatus />
-                        <StromQueueStatus /> {/* Alte Komponente als Zusatz */}
+                    <div className="animate-fadeIn">
+                        {/* SYNTX-CLUSTER 1: SYSTEM INTEGRITÄT */}
+                        <div className="mb-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <FullSystemHealth />
+                                <ResonanzSystemHealth />
+                            </div>
+                        </div>
+                        
+                        {/* SYNTX-CLUSTER 2: QUEUE STROM */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <ResonanzQueueStatus />
+                            <StromQueueStatus />
+                        </div>
                     </div>
                 );
             case 'evolution':
                 return (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fadeIn">
                         <EvolutionProgressFull />
+                        <div className="md:col-span-2">
+                            <SyntxVsNormal />
+                        </div>
                         <PromptTrends />
-                        <SyntxVsNormal />
                         <TopicCounts />
                         <TopicScoresSummary />
-                        <EvolutionProgress /> {/* Alte Komponente als Zusatz */}
+                        <EvolutionProgress />
                     </div>
                 );
             case 'performance':
                 return (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fadeIn">
                         <FullPerformanceStats />
                         <GlobalSuccessRate />
                         <TotalCosts />
                         <WrapperSuccessRate />
-                        <PerformanceStats /> {/* Alte Komponente als Zusatz */}
+                        <PerformanceStats />
                     </div>
                 );
             case 'details':
                 return (
-                    <div className="space-y-8">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div className="space-y-6 animate-fadeIn">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             <DriftList />
                             <ScoreDistribution />
                         </div>
@@ -79,34 +91,54 @@ export const DashboardTabs: React.FC = () => {
                     </div>
                 );
             default:
-                return <div>Wähle einen Tab aus.</div>;
+                return <div className="text-gray-400 text-center p-8">🌀 Feld wird geladen...</div>;
         }
     };
 
     return (
         <div className="w-full">
-            {/* Tab Navigation */}
-            <div className="flex border-b border-red-700 mb-6 overflow-x-auto">
-                {tabs.map((tab) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`
-                            py-3 px-6 text-sm font-semibold transition-colors duration-200 
-                            ${activeTab === tab.id
-                                ? 'border-b-4 border-red-500 text-red-400 bg-gray-800'
-                                : 'text-gray-500 hover:text-red-300 hover:bg-gray-900'
-                            }
-                        `}
-                    >
-                        {tab.name}
-                    </button>
-                ))}
+            {/* Tab Navigation – organisch, lebendig */}
+            <div className="flex flex-wrap gap-2 mb-8 p-2 bg-gray-900/50 rounded-2xl border border-gray-800 shadow-2xl shadow-black/50">
+                {tabs.map((tab) => {
+                    const isActive = activeTab === tab.id;
+                    const isHover = hoverTab === tab.id;
+
+                    return (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            onMouseEnter={() => setHoverTab(tab.id)}
+                            onMouseLeave={() => setHoverTab(null)}
+                            className={`
+                                relative px-5 py-3 rounded-xl text-sm font-semibold transition-all duration-300 
+                                flex items-center gap-2
+                                ${isActive
+                                    ? 'bg-gradient-to-r from-red-900/70 to-cyan-900/70 text-white shadow-lg shadow-red-900/30 border border-red-700/50'
+                                    : 'bg-gray-900/40 text-gray-400 hover:text-gray-300 hover:bg-gray-800/60 border border-gray-800'
+                                }
+                                ${isHover && !isActive ? 'scale-[1.02] shadow-md shadow-gray-900' : ''}
+                            `}
+                        >
+                            {/* Pulsierender Punkt für aktiven Tab */}
+                            {isActive && (
+                                <span className="absolute -top-1 -right-1 w-3 h-3">
+                                    <span className="absolute inline-flex w-full h-full bg-red-500 rounded-full animate-ping opacity-75"></span>
+                                    <span className="relative inline-flex w-3 h-3 bg-red-400 rounded-full"></span>
+                                </span>
+                            )}
+                            
+                            <span>{tab.name}</span>
+                        </button>
+                    );
+                })}
             </div>
 
-            {/* Tab Content */}
-            <div className="p-4 bg-gray-950">
-                {renderContent()}
+            {/* Tab Content – mit weichem Übergang */}
+            <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-transparent to-cyan-900/10 rounded-3xl blur-xl"></div>
+                <div className="relative p-6 bg-gray-950/80 backdrop-blur-sm border border-gray-800 rounded-3xl shadow-2xl shadow-black/50">
+                    {renderContent()}
+                </div>
             </div>
         </div>
     );
